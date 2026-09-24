@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Ethics in Business, live poll</title>
+<style>
+  :root {
+    --ink: #17252a; --muted: #5b6b70; --rule: #dde4e5;
+    --paper: #f6f4ef; --accent: #16697a; --accent-light: #e2eef0;
+    --accent2: #b5651d; --accent2-light: #f6e8db; --white: #ffffff;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+    font-family: Calibri, "Segoe UI", system-ui, sans-serif; font-size: 17px; line-height: 1.5; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 22px 18px 60px; }
+  h1, h2, h3 { font-family: Cambria, Georgia, serif; margin: 0 0 12px; }
+  h1 { font-size: 28px; } h2 { font-size: 23px; } h3 { font-size: 19px; }
+  .kicker { text-transform: uppercase; letter-spacing: .08em; font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  .card { background: var(--white); border: 1px solid var(--rule); border-radius: 6px; padding: 20px; margin-bottom: 16px; }
+  button { font: inherit; cursor: pointer; border-radius: 5px; border: 1px solid var(--accent); background: var(--accent); color: #fff; padding: 11px 18px; }
+  button.ghost { background: var(--white); color: var(--accent); }
+  button:disabled { opacity: .45; cursor: default; }
+  input { font: inherit; padding: 11px 12px; border: 1px solid var(--rule); border-radius: 5px; width: 100%; background: var(--white); color: var(--ink); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .code { font-family: Consolas, monospace; font-size: 68px; font-weight: 700; letter-spacing: .12em; color: var(--accent); line-height: 1.05; }
+  .muted { color: var(--muted); font-size: 14px; }
+  .join { display: flex; gap: 26px; align-items: center; flex-wrap: wrap; }
+  .qr { width: 180px; height: 180px; background: #fff; padding: 8px; border-radius: 6px; border: 1px solid var(--rule); flex: none; }
+  .qr svg { width: 100%; height: 100%; display: block; }
+  .qlist { list-style: none; padding: 0; margin: 0 0 4px; }
+  .qlist li { border: 1px solid var(--rule); border-radius: 5px; padding: 11px 14px; margin-bottom: 7px; cursor: pointer; background: var(--white); }
+  .qlist li.open { border-color: var(--accent); background: var(--accent-light); }
+  .qlist .tag { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+  .likert { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 16px 0; }
+  .likert button { padding: 18px 6px; background: var(--white); color: var(--accent); font-size: 15px; line-height: 1.25; }
+  .likert button.picked { background: var(--accent); color: #fff; }
+  .opt { display: block; width: 100%; text-align: left; background: var(--white); color: var(--ink); border: 1px solid var(--rule); padding: 14px; margin-bottom: 9px; }
+  .opt.picked { border-color: var(--accent); background: var(--accent-light); }
+  .opt b { color: var(--accent); }
+  .opt span { display: block; color: var(--muted); font-size: 14px; margin-top: 3px; }
+  .rank li { list-style: none; border: 1px solid var(--rule); background: var(--white); border-radius: 5px; padding: 12px 14px; margin-bottom: 9px; display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center; }
+  .rank ol { padding: 0; margin: 0; }
+  .rank .pos { font-family: Cambria, Georgia, serif; font-size: 22px; color: var(--accent); text-align: center; }
+  .rank .mv button { padding: 7px 12px; margin-left: 5px; }
+  .rank b { display: block; } .rank span { color: var(--muted); font-size: 14px; }
+  .bar { display: grid; grid-template-columns: minmax(140px, 32%) 1fr 52px; gap: 12px; align-items: center; margin-bottom: 9px; font-size: 16px; }
+  .bar .track { background: var(--accent-light); border-radius: 3px; height: 26px; overflow: hidden; }
+  .bar .fill { background: var(--accent); height: 100%; }
+  .bar.alt .track { background: var(--accent2-light); }
+  .bar.alt .fill { background: var(--accent2); }
+  .bar .lab { overflow-wrap: break-word; }
+  .legend { display: flex; gap: 18px; font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+  .swatch { display: inline-block; width: 13px; height: 13px; border-radius: 2px; vertical-align: -1px; margin-right: 6px; }
+  .bignum { font-size: 46px; font-family: Cambria, Georgia, serif; margin: 0 0 6px; }
+  .note { margin-top: 18px; border-left: 4px solid var(--accent); background: var(--accent-light); padding: 14px 18px; border-radius: 0 5px 5px 0; }
+  .note p { margin: 0; font-size: 19px; line-height: 1.55; }
+  .others { margin: 10px 0 0; padding: 0; list-style: none; }
+  .others li { border-left: 3px solid var(--accent2); padding: 5px 0 5px 12px; margin-bottom: 6px; font-size: 16px; }
+  .err { color: #9b2226; font-size: 15px; }
+  .prompt { font-size: 19px; line-height: 1.5; }
+  @media (max-width: 620px) {
+    .likert { grid-template-columns: 1fr; }
+    .likert button { padding: 13px; text-align: left; }
+    .code { font-size: 48px; }
+    .bar { grid-template-columns: minmax(96px, 38%) 1fr 40px; font-size: 15px; }
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eef2f2; --muted: #a3b1b5; --rule: #2e3c40; --paper: #10191b;
+      --accent: #6fc2d0; --accent-light: #1b3238; --accent2: #e0a367; --accent2-light: #33261a; --white: #162225; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const app = document.getElementById('app');
+const api = (u, opts) => fetch(u, opts).then(r => r.json().then(j => r.ok ? j : Promise.reject(j)));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let timer = null;
+function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+function voterToken(code) {
+  const k = 'xpoll-voter-' + code;
+  try {
+    let v = localStorage.getItem(k);
+    if (!v) { v = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem(k, v); }
+    return v;
+  } catch (e) { return Math.random().toString(36).slice(2); }
+}
+function saveHost(code, key) { try { localStorage.setItem('xpoll-host', JSON.stringify({ code, key })); } catch (e) {} }
+function loadHost() { try { return JSON.parse(localStorage.getItem('xpoll-host') || 'null'); } catch (e) { return null; } }
+
+// ------------------------------------------------------------ results
+function labelsFor(q) {
+  const l = q.options.map(o => [o.id, o.label]);
+  if (q.allowOther) l.push(['other', 'Other']);
+  return l;
+}
+function bars(q, res, alt) {
+  const labels = labelsFor(q);
+  const max = Math.max(1, ...labels.map(([id]) => res.dist[id] || 0));
+  return labels.map(([id, lab]) => {
+    const n = res.dist[id] || 0;
+    return '<div class="bar' + (alt ? ' alt' : '') + '"><div class="lab">' + esc(lab) + '</div>'
+      + '<div class="track"><div class="fill" style="width:' + Math.round((n / max) * 100) + '%"></div></div>'
+      + '<div>' + n + '</div></div>';
+  }).join('');
+}
+// Two rounds of the same question, interleaved so the shift reads at a glance.
+function compareBars(q, now, prev, prevLabel, nowLabel) {
+  const labels = labelsFor(q);
+  const max = Math.max(1, ...labels.map(([id]) => Math.max(prev.dist[id] || 0, now.dist[id] || 0)));
+  let html = '<div class="legend"><span><span class="swatch" style="background:var(--accent2)"></span>'
+    + esc(prevLabel) + '</span><span><span class="swatch" style="background:var(--accent)"></span>' + esc(nowLabel) + '</span></div>';
+  html += labels.map(([id, lab]) => {
+    const a = prev.dist[id] || 0, b = now.dist[id] || 0;
+    const shift = b - a;
+    return '<div class="bar alt"><div class="lab">' + esc(lab) + '</div>'
+      + '<div class="track"><div class="fill" style="width:' + Math.round((a / max) * 100) + '%"></div></div><div>' + a + '</div></div>'
+      + '<div class="bar" style="margin-bottom:14px"><div class="lab muted">' + (shift > 0 ? '+' + shift : shift) + '</div>'
+      + '<div class="track"><div class="fill" style="width:' + Math.round((b / max) * 100) + '%"></div></div><div>' + b + '</div></div>';
+  }).join('');
+  return html;
+}
+function rankBars(q, res) {
+  const rows = q.items.map(it => [it, res.means[it.id] || 0]).sort((x, y) => x[1] - y[1]);
+  const worst = q.items.length;
+  return rows.map(([it, mean]) =>
+    '<div class="bar"><div class="lab">' + esc(it.label) + '</div>'
+    + '<div class="track"><div class="fill" style="width:' + Math.round(((worst - mean + 1) / worst) * 100) + '%"></div></div>'
+    + '<div>' + mean.toFixed(2) + '</div></div>'
+    + '<p class="muted" style="margin:-4px 0 12px">' + (res.firsts[it.id] || 0) + ' ranked this most problematic</p>'
+  ).join('') + '<p class="muted">Lower mean rank means more ethically problematic. ' + res.count + ' ranking' + (res.count === 1 ? '' : 's') + '.</p>';
+}
+function othersList(res) {
+  if (!res.others || !res.others.length) return '';
+  return '<h3 style="margin-top:18px">Written in under Other</h3><ul class="others">'
+    + res.others.map(t => '<li>' + esc(t) + '</li>').join('') + '</ul>';
+}
+function resultsBlock(q, res, compare) {
+  if (q.type === 'rank') return rankBars(q, res);
+  let html;
+  if (compare && compare.results.count) {
+    html = compareBars(q, res, compare.results, compare.question.title, q.title);
+  } else {
+    html = bars(q, res);
+  }
+  html += '<p class="muted">' + res.count + ' response' + (res.count === 1 ? '' : 's') + '</p>';
+  return html + othersList(res);
+}
+
+// ------------------------------------------------------------ home
+function home(prefill) {
+  stop();
+  const saved = loadHost();
+  app.innerHTML = `
+    <div class="kicker">Bentley Executive Education</div>
+    <h1>AI Ethics in Business</h1>
+    <div class="card">
+      <h2>Join the poll</h2>
+      <p class="muted">Enter the four-digit code on the screen. Responses are anonymous.</p>
+      <div class="row"><input id="code" inputmode="numeric" maxlength="4" placeholder="0000" style="max-width:170px" value="${prefill || ''}">
+      <button id="join">Join</button></div>
+    </div>
+    <div class="card">
+      <h2>Presenter</h2>
+      <div class="row">
+        <button id="create">Create room</button>
+        ${saved ? '<button class="ghost" id="resume">Resume room ' + saved.code + '</button>' : ''}
+      </div>
+    </div>`;
+  const go = () => { const c = document.getElementById('code').value.trim(); if (c.length === 4) student(c); };
+  document.getElementById('join').onclick = go;
+  document.getElementById('code').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  document.getElementById('create').onclick = () =>
+    api('/api/room', { method: 'POST' }).then(r => { saveHost(r.code, r.key); host(r.code, r.key); });
+  if (saved) document.getElementById('resume').onclick = () => host(saved.code, saved.key);
+}
+
+// ------------------------------------------------------------ presenter
+function host(code, key) {
+  stop();
+  let questions = [], qrSvg = '';
+  let state = { openId: null, revealed: false, noteShown: false, results: {} };
+
+  api('/api/qr?code=' + code).then(r => { qrSvg = r.svg; render(); }).catch(() => {});
+  api('/api/questions').then(r => { questions = r.questions; tick(); timer = setInterval(tick, 2500); });
+
+  function post(p, body) {
+    return api('/api/room/' + code + '/' + p, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ key }, body))
+    }).then(tick);
+  }
+  function tick() {
+    return api('/api/room/' + code + '/host?key=' + key)
+      .then(s => { state = s; render(); })
+      .catch(() => {
+        stop();
+        app.innerHTML = '<div class="card"><h2>This room is no longer on the server</h2>'
+          + '<p class="muted">The service restarted, which clears every room and its votes. '
+          + 'Create a new room and give the audience the new code.</p>'
+          + '<div class="row"><button id="new">Create room</button><button class="ghost" id="hm">Back</button></div></div>';
+        document.getElementById('new').onclick = () =>
+          api('/api/room', { method: 'POST' }).then(r => { saveHost(r.code, r.key); host(r.code, r.key); });
+        document.getElementById('hm').onclick = () => home();
+      });
+  }
+  function listFor(session) {
+    const qs = questions.filter(q => q.session === session);
+    if (!qs.length) return '';
+    return '<h3>Session ' + session + '</h3><ul class="qlist">'
+      + qs.map(q => '<li data-id="' + q.id + '" class="' + (q.id === state.openId ? 'open' : '') + '">'
+        + '<span class="tag">' + esc(q.tag) + (q.id === state.openId ? ' · open' : '') + '</span><br>'
+        + '<b>' + esc(q.title) + '</b></li>').join('') + '</ul>';
+  }
+  function render() {
+    const q = questions.find(x => x.id === state.openId);
+    const res = state.results[state.openId];
+    const compare = q && q.compareWith
+      ? { question: questions.find(x => x.id === q.compareWith), results: state.results[q.compareWith] }
+      : null;
+    app.innerHTML = `
+      <div class="card">
+        <div class="join">
+          <div class="qr">${qrSvg}</div>
+          <div>
+            <div class="kicker">Scan, or go to this page and enter</div>
+            <div class="code">${code}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">${listFor(1)}${listFor(2)}</div>
+      ${q ? `
+      <div class="card">
+        <div class="kicker">${esc(q.tag)} · now open</div>
+        <h2>${esc(q.title)}</h2>
+        <p class="prompt">${esc(q.prompt)}</p>
+        <p class="bignum">${res ? res.count : 0}<span class="muted" style="font-size:17px"> responses in</span></p>
+        ${state.revealed && res ? resultsBlock(q, res, compare) : '<p class="muted">Results are hidden here and on every phone until you reveal them.</p>'}
+        <div class="row" style="margin-top:14px">
+          <button id="rev">${state.revealed ? 'Hide results' : 'Reveal results'}</button>
+          ${q.note ? '<button id="note">' + (state.noteShown ? 'Hide the note' : 'Show the note') + '</button>' : ''}
+          <button class="ghost" id="close">Close</button>
+          <button class="ghost" id="reset">Clear votes</button>
+        </div>
+        ${q.note && state.noteShown ? '<div class="note"><div class="kicker">For the record</div><p>' + esc(q.note) + '</p></div>' : ''}
+      </div>` : '<div class="card"><p class="muted">Select a poll above to open it.</p></div>'}
+      <p class="row"><button class="ghost" id="back">Back</button></p>`;
+
+    app.querySelectorAll('.qlist li').forEach(li => { li.onclick = () => post('open', { qid: li.dataset.id }); });
+    if (q) {
+      document.getElementById('rev').onclick = () => post('reveal', { revealed: !state.revealed });
+      const nb = document.getElementById('note');
+      if (nb) nb.onclick = () => post('note', { shown: !state.noteShown });
+      document.getElementById('close').onclick = () => post('open', { qid: null });
+      document.getElementById('reset').onclick = () => { if (confirm('Clear all responses for this poll?')) post('reset', { qid: state.openId }); };
+    }
+    document.getElementById('back').onclick = () => home();
+  }
+}
+
+// ------------------------------------------------------------ participant
+function student(code) {
+  stop();
+  const voter = voterToken(code);
+  let state = { openId: null };
+  let order = null, orderFor = null;   // working ranking, per question
+  let otherOpen = false, otherText = '';
+
+  function tick() {
+    return api('/api/room/' + code + '/student?voter=' + voter)
+      .then(s => {
+        if (s.openId !== state.openId) { order = null; otherOpen = false; otherText = ''; }
+        state = s; render();
+      })
+      .catch(e => {
+        stop();
+        app.innerHTML = '<div class="card"><p class="err">' + esc(e.error || 'Could not reach the room.') + '</p>'
+          + '<button id="b">Back</button></div>';
+        document.getElementById('b').onclick = () => home();
+      });
+  }
+  function send(body) {
+    return api('/api/room/' + code + '/vote', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ qid: state.openId, voter }, body))
+    }).then(tick).catch(() => tick());
+  }
+  function ensureOrder(q) {
+    if (order && orderFor === q.id) return order;
+    if (state.myVote && state.myVote.order) { order = state.myVote.order.slice(); }
+    else { order = q.items.map(i => i.id).sort(() => Math.random() - 0.5); }  // shuffled, so position is not a nudge
+    orderFor = q.id;
+    return order;
+  }
+  function move(i, d) {
+    const j = i + d;
+    if (j < 0 || j >= order.length) return;
+    const t = order[i]; order[i] = order[j]; order[j] = t;
+    render();
+  }
+
+  function render() {
+    if (!state.openId) {
+      app.innerHTML = '<div class="kicker">Room ' + code + '</div><div class="card"><h2>You are in</h2>'
+        + '<p class="muted">Waiting for the next poll. Leave this page open.</p></div>';
+      return;
+    }
+    const q = state.question;
+    const voted = state.myVote !== null && state.myVote !== undefined;
+    let body = '<div class="kicker">' + esc(q.tag) + ' · anonymous</div><div class="card">'
+      + '<h2>' + esc(q.title) + '</h2><p class="prompt">' + esc(q.prompt) + '</p>';
+
+    if (q.type === 'rank') {
+      const ord = ensureOrder(q);
+      body += '<div class="rank"><ol>' + ord.map((id, i) => {
+        const it = q.items.find(x => x.id === id);
+        return '<li><div class="pos">' + (i + 1) + '</div><div><b>' + esc(it.label) + '</b><span>' + esc(it.sub) + '</span></div>'
+          + '<div class="mv"><button class="ghost" data-mv="' + i + '" data-d="-1"' + (i === 0 ? ' disabled' : '') + '>&#9650;</button>'
+          + '<button class="ghost" data-mv="' + i + '" data-d="1"' + (i === ord.length - 1 ? ' disabled' : '') + '>&#9660;</button></div></li>';
+      }).join('') + '</ol></div>'
+        + '<p class="muted">1 is most ethically problematic. Use the arrows, then submit.</p>'
+        + '<button id="sub">' + (voted ? 'Update my ranking' : 'Submit my ranking') + '</button>';
+    } else if (q.type === 'likert') {
+      const pick = voted ? state.myVote.c : null;
+      body += '<div class="likert">' + q.options.map(o =>
+        '<button data-v="' + o.id + '"' + (pick === o.id ? ' class="picked"' : '') + '>' + esc(o.label) + '</button>').join('') + '</div>';
+    } else {
+      const pick = voted ? state.myVote.c : null;
+      body += q.options.map(o => '<button class="opt' + (pick === o.id ? ' picked' : '') + '" data-v="' + o.id + '">'
+        + '<b>' + esc(o.label) + '</b>' + (o.sub ? '<span>' + esc(o.sub) + '</span>' : '') + '</button>').join('');
+      if (q.allowOther) {
+        const chosen = pick === 'other';
+        body += '<button class="opt' + (chosen ? ' picked' : '') + '" id="otherbtn"><b>Other</b>'
+          + (chosen && state.myVote.t ? '<span>' + esc(state.myVote.t) + '</span>' : '') + '</button>';
+        if (otherOpen || (chosen && otherOpen)) {
+          body += '<div class="row" style="margin-top:4px"><input id="othertext" maxlength="140" placeholder="Type your answer" value="'
+            + esc(otherText) + '"><button id="othersend">Send</button></div>';
+        }
+      }
+    }
+
+    if (voted) body += '<p class="muted">Your response is recorded. You can change it while the poll is open.</p>';
+    if (state.results) {
+      body += '<h3 style="margin-top:18px">How the room answered</h3>'
+        + resultsBlock(q, state.results, state.compare || null);
+    }
+    body += '</div>';
+    app.innerHTML = body;
+
+    app.querySelectorAll('[data-v]').forEach(b => { b.onclick = () => send({ choice: b.dataset.v }); });
+    app.querySelectorAll('[data-mv]').forEach(b => { b.onclick = () => move(Number(b.dataset.mv), Number(b.dataset.d)); });
+    const sub = document.getElementById('sub');
+    if (sub) sub.onclick = () => send({ order: order });
+    const ob = document.getElementById('otherbtn');
+    if (ob) ob.onclick = () => { otherOpen = true; render(); setTimeout(() => { const t = document.getElementById('othertext'); if (t) t.focus(); }, 0); };
+    const ot = document.getElementById('othertext');
+    if (ot) {
+      ot.oninput = e => { otherText = e.target.value; };
+      ot.onkeydown = e => { if (e.key === 'Enter') document.getElementById('othersend').click(); };
+    }
+    const os = document.getElementById('othersend');
+    if (os) os.onclick = () => { if (otherText.trim()) { otherOpen = false; send({ choice: 'other', text: otherText }); } };
+  }
+  tick(); timer = setInterval(tick, 2500);
+}
+
+// A scanned QR carries ?code=1234, so the phone lands straight on the poll.
+const fromUrl = new URLSearchParams(location.search).get('code');
+if (fromUrl && /^\d{4}$/.test(fromUrl)) student(fromUrl); else home();
+</script>
+</body>
+</html>
