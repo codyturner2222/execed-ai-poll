@@ -272,6 +272,7 @@ function student(code) {
   let state = { openId: null };
   let order = null, orderFor = null;   // working ranking, per question
   let otherOpen = false, otherText = '';
+  let lastSig = '';
 
   function tick() {
     return api('/api/room/' + code + '/student?voter=' + voter)
@@ -307,6 +308,14 @@ function student(code) {
   }
 
   function render() {
+    // The page refreshes every couple of seconds. Redrawing it while someone is
+    // typing their Other answer would drop the phone keyboard mid-sentence, so
+    // hold off unless the poll itself has actually moved on.
+    const sig = state.openId + '|' + state.revealed;
+    const ae = document.activeElement;
+    if (ae && ae.id === 'othertext' && sig === lastSig) return;
+    lastSig = sig;
+
     if (!state.openId) {
       app.innerHTML = '<div class="kicker">Room ' + code + '</div><div class="card"><h2>You are in</h2>'
         + '<p class="muted">Waiting for the next poll. Leave this page open.</p></div>';
