@@ -36,7 +36,8 @@ const WORRIES = [
   { id: 'transparency', label: 'Transparency and opacity' },
   { id: 'privacy', label: 'Privacy and surveillance' },
   { id: 'accountability', label: 'Accountability and oversight' },
-  { id: 'safety', label: 'Safety and unintended consequences' }
+  { id: 'safety', label: 'Safety and unintended consequences' },
+  { id: 'environment', label: 'Environmental and energy costs' }
 ];
 
 const QUESTIONS = [
