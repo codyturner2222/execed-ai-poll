@@ -112,6 +112,19 @@ const QUESTIONS = [
     ]
   },
   {
+    id: 'p0',
+    session: 2,
+    tag: 'Session 2 opener',
+    title: 'Colleague or AI?',
+    type: 'choice',
+    prompt: 'On a business decision, whose advice would you trust more: a typical colleague\'s or an AI\'s?',
+    options: [
+      { id: 'colleague', label: 'A typical colleague\'s' },
+      { id: 'ai', label: 'An AI\'s' },
+      { id: 'same', label: 'About the same' }
+    ]
+  },
+  {
     id: 'p5a',
     session: 2,
     tag: 'Poll 5, statement 1',
