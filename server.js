@@ -120,8 +120,7 @@ const QUESTIONS = [
     prompt: 'On a business decision, whose advice would you trust more: a typical colleague\'s or an AI\'s?',
     options: [
       { id: 'colleague', label: 'A typical colleague\'s' },
-      { id: 'ai', label: 'An AI\'s' },
-      { id: 'same', label: 'About the same' }
+      { id: 'ai', label: 'An AI\'s' }
     ]
   },
   {
@@ -158,6 +157,24 @@ const QUESTIONS = [
     title: 'Complete recall',
     type: 'likert',
     prompt: 'A business partner or longtime colleague remembers maybe ten percent of everything you have discussed over the years. An AI advisor fed all your meeting notes, emails, and past decisions remembers all of it. In a high-stakes decision, the AI is the better advisor to consult, and preferring your partner\'s judgment over the AI\'s complete recall is just sentimentality.',
+    options: AGREE5
+  },
+  {
+    id: 'p7a',
+    session: 2,
+    tag: 'Poll 7, statement 5',
+    title: 'The race with China',
+    type: 'likert',
+    prompt: 'If China won\'t slow its frontier AI development, the US shouldn\'t slow its own.',
+    options: AGREE5
+  },
+  {
+    id: 'p7b',
+    session: 2,
+    tag: 'Poll 7, statement 6',
+    title: 'Who bears liability?',
+    type: 'likert',
+    prompt: 'When an AI system causes harm, the company that built the model should bear most of the legal liability, rather than the business that deployed it.',
     options: AGREE5
   }
 ];
